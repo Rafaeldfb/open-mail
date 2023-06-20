@@ -11,7 +11,6 @@ Now use pip to match the python's packages requirement:
   pip install -r requirements.txt
 ```
 
-node.Js verion: 16.20.0
-
-
+Install all node dependencies:
+$ npm i
 
