@@ -69,7 +69,7 @@ function sent_mail_callback(response) {
 
   return true;
 }
-//  SEND EMAIL        **** END
+//        SEND EMAIL        **** END
 
 
 //        AJAX FECTH HELPER
