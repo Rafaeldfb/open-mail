@@ -34,7 +34,12 @@ function load_mailbox(mailbox) {
   document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
 }
 
-//  SEND EMAIL        **** START
+//          SEND EMAIL        **** START
+/**
+ * Called at compose email form's submit event - It handle submission of email data and a callback to the fecth handler.
+ * @param {event} event - Tthe event triggered by form submission.
+ * @returns {function} - calls the request handles with data and callback as args.
+ */
 function send_mail(event) {
   event.preventDefault();
 
@@ -50,15 +55,32 @@ function send_mail(event) {
   return make_request(requestUrl, mailData, 'post', sent_mail_callback);
 }
 
+/**
+ * A callback to run after a successfull request. Responsible to trigger all UI changes.
+ * @param {object} response  the parsed response body, got after the fetch promise got fullfilled
+ * @returns {bollean} - False means invalid response / message.
+ */
 function sent_mail_callback(response) {
   const message = response?.message ?? '';
-  if (!message) return null;
+  if (!message) return false;
 
-  return display_message(message);
+  load_mailbox('inbox');
+  display_message(message);
+
+  return true;
 }
 //  SEND EMAIL        **** END
 
-// AJAX FECTH HELPER
+
+//        AJAX FECTH HELPER
+/**
+ * AJAX HANDLER - receives as paramitters the arguments to do a Fetch request.
+ * @param {string} url - the route as string to address the request.
+ * @param {object} requestData - the data to serialyze and send with the request.
+ * @param {string} requestMethod - the http verb of request.
+ * @param {function} callback - (Optional) A callback that receives the parsed request body.
+ * @returns {boolean}
+ */
 async function make_request(url, requestData, requestMethod, callback=null) {
   const request = await fetch(
     url, 
@@ -76,20 +98,25 @@ async function make_request(url, requestData, requestMethod, callback=null) {
   return true
 }
 
-// Messages - 
+
+//        Messages 
 const messageContainerElement = document.querySelector('#messagesConteiner');
 const messageWrapper = messageContainerElement.querySelector('#toastWrapper');
 const messageToast = messageWrapper.querySelector('.toast');
 
+/**
+ * Display a message using Bootstrap toast
+ * @param {string} message - The message to display inside of the Toast body.
+ * @returns {boolean}
+ */
 function display_message(message) {
   if (typeof message != 'string'|| !message.trim().length ) return false;
 
   const messageToastInstance = bootstrap.Toast.getOrCreateInstance(messageToast);
 
   messageToast.querySelector('#messageContent').innerHTML = message.trim();
-  console.log("display_message", messageToast);
 
-  messageToastInstance.show()
+  messageToastInstance.show();
 
   return true;
 }
