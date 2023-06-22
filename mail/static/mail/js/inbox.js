@@ -64,7 +64,7 @@ function sent_mail_callback(response) {
   const message = response?.message ?? '';
   if (!message) return false;
 
-  load_mailbox('inbox');
+  load_mailbox('sent');
   display_message(message);
 
   return true;
