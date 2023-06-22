@@ -1,27 +1,54 @@
 {% load static %}
+{% load django_vite %}
 
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        {% comment %} {% vite_hmr_client %} {% endcomment %}
+        <script type="module" src="http://localhost:3000/@vite/client"></script>
+
         <title>{% block title %}Mail{% endblock %}</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <link 
-            rel="stylesheet" 
-            href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" 
-            integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" 
-            crossorigin="anonymous"
-        >
-
-        <link rel="stylesheet" href="{% static 'mail/styles.css' %}">
-
-        {% block script %}
-        {% endblock %}
+        <link
+            rel="shortcut icon" 
+            type="image/png" 
+            href="{% vite_asset_url 'img/favicons/favicon-mail-color-120.png' %}"
+        />
+        
+        {% vite_asset 'js/main.js' async="async" %}
     </head>
     
     <body>
+        <div id="messagesConteiner" class="position-absolute top-0 left-0 w-100">
+            {% comment %} here feedback messages are displayed {% endcomment %}
+            <div id="toastWrapper" class="d-flex justify-content-end">
+                <div 
+                    class="toast align-items-center text-bg-primary border-0 m-5" 
+                    role="alert" 
+                    aria-live="assertive" 
+                    aria-atomic="true"
+                >
+                    <div class="d-flex">
+                        <div id="messageContent" class="toast-body fw-semibold mx-auto"></div>
+
+                        <button 
+                            type="button" 
+                            class="btn-close me-2 m-auto" 
+                            data-bs-dismiss="toast" 
+                            aria-label="Close"
+                        ></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="container">
             {% block body %}
             {% endblock %}
         </div>
+
+        {% block script %}{% endblock script %}
     </body>
 </html>

@@ -1,0 +1,30 @@
+{
+  "name": "open-mail",
+  "version": "0.0.1",
+  "description": "CS50 web project 3 - mail",
+  "main": "./mail/static/mail/distjs/main.js",
+  "scripts": {
+    "dev": "vite",
+    "prod": "vite build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rafaeldfb/open-mail.git"
+  },
+  "author": "Rafael dfb",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Rafaeldfb/open-mail/issues"
+  },
+  "homepage": "https://github.com/Rafaeldfb/open-mail#readme",
+  "dependencies": {
+    "@popperjs/core": "^2.11.8",
+    "bootstrap": "^5.3.0",
+    "dotenv": "^16.3.1",
+    "vite": "^4.3.9"
+  },
+  "devDependencies": {
+    "sass": "^1.63.4"
+  }
+}

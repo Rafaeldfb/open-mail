@@ -25,22 +25,35 @@ SECRET_KEY = '05$4$3aew(8ywondz$g!k4m779pbvn9)euj0zp7-ae*x@4pxr+'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "localhost",
+]
+
+CORS_ORIGIN_ALLOW_ALL = DEBUG
+
+CORS_ORIGIN_WHITELIST = [
+    'http://127.0.0.1:3000',  # Add your vite development server URL here
+    'http://localhost:3000',  # Add your vite development server URL here
+]
 
 
 # Application definition
 
 INSTALLED_APPS = [
     'mail',
+    'django_vite',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -115,8 +128,24 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = './mail/static/mail/'
+
+## Where ViteJS assets are built.
+# DJANGO_VITE_ASSETS_PATH = os.path.join(BASE_DIR, '/static/mail/src/')
+DJANGO_VITE_ASSETS_PATH = STATIC_URL
+
+# If use HMR or not.
+DJANGO_VITE_DEV_MODE = DEBUG
+
+# Name of static files folder (after called python manage.py collectstatic)
+STATIC_ROOT = os.path.join(BASE_DIR, 'collectedstatic')
+
+# Include DJANGO_VITE_ASSETS_PATH into STATICFILES_DIRS to be copied inside
+# when run command python manage.py collectstatic
+STATICFILES_DIRS = [DJANGO_VITE_ASSETS_PATH]
+
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
