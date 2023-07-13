@@ -42,6 +42,14 @@
                     </div>
                 </div>
             </div>
+
+            <template id="emailListItemTemplate">
+                <div class="row emaiListItem border-bottom border-1 border-secondary my-2 cursor-pointer" onclick="openMail(this.dataset.id)" data-mail-id="" data-mail-status="">
+                    <div class="col-auto sender">From: <span data-mail-sender></span></div>
+                    <div class="col subject">Subject: <span data-mail-subject></span></div>
+                    <div class="col-auto timestamp">Timestamp: <span data-mail-timestamp></span></div>
+                </div>
+            </template>
         </div>
 
         <div class="container">

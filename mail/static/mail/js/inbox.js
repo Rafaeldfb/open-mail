@@ -1,5 +1,6 @@
 // CONSTANTS
-const BASE_URL = true ? '' : '127.0.0.1:8000' // by requirements, i cant use other file. so isn't possible to do some import dotenv stuff and so it will be hard coded here.
+const BASE_URL = true ? '' : '127.0.0.1:8000' // by requirements, i cant use other file. 
+//so isn't possible to do some import dotenv stuff and so it will be hard coded here.
 
 document.addEventListener('DOMContentLoaded', function() {
 
@@ -31,7 +32,82 @@ function load_mailbox(mailbox) {
   document.querySelector('#compose-view').style.display = 'none';
 
   // Show the mailbox name
-  document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
+  document.querySelector('#mailboxTitle').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
+  // Clear all previus content
+  document.querySelector("#listBoxContent").innerHTML = ''
+
+  // Implematention of related content load
+  return loader_handler(mailbox);
+}
+
+function loader_handler(mailbox) {
+  const mailboxes = ['inbox', 'sent', 'archive'];
+
+  if (!mailboxes.includes(mailbox)) return null;
+
+  const requestUrl = `emails/${mailbox}`;
+
+  return make_request(
+    requestUrl, 
+    null, 
+    'get', 
+    (response) => mailbox_loader_callback(response, mailbox)
+  );
+}
+
+function mailbox_loader_callback(response, mailbox) {
+  console.log('response: ', response);
+  console.log('mailbox: ', mailbox);
+
+  
+  // If the response is empty, show an emptyness message
+  const emptyWarningElement = document.querySelector('#emptyBoxContent');
+
+  if (!response.length) {
+    emptyWarningElement.classList.replace('d-none', 'd-block')
+    return true;
+  } 
+
+  emptyWarningElement.classList.replace('d-block', 'd-none')
+  const template = document.querySelector('#emailListItemTemplate');
+
+  response.forEach(function(mailObjc, index, arr, arg=template) {
+    return mailListItemBuilder(mailObjc, template);
+  })
+
+  return true;
+}
+
+function mailListItemBuilder(mailObject, templateElement) {
+  const mailItemData = {
+    id: mailObject.id,
+    sender: mailObject.sender,
+    recipients: [...mailObject.recipients],
+    subject: mailObject.subject,
+    body: mailObject.body,
+    timestamp: formatTimestamp(mailObject.timestamp),
+    read: mailObject.read,
+    archived: mailObject.archived,
+  }
+
+  const emailItemClone = templateElement.content.cloneNode(true).firstElementChild;
+
+  // Fill all data from this email in the template
+  emailItemClone.dataset.mailId = mailItemData.id;
+  emailItemClone.dataset.mailStatus = mailItemData.read;
+
+  emailItemClone.querySelector('[data-mail-sender]').textContent = mailItemData.sender;
+  emailItemClone.querySelector('[data-mail-subject]').textContent =  mailItemData.subject;
+  emailItemClone.querySelector('[data-mail-timestamp]').textContent = mailItemData.timestamp;
+
+  
+  document.querySelector("#listBoxContent").appendChild(emailItemClone);
+
+  return null;
+}
+
+function openMail(mailId) {
+  return alert(`Opened mail within id is ${mailId}`);
 }
 
 //          SEND EMAIL        **** START
@@ -58,7 +134,7 @@ function send_mail(event) {
 /**
  * A callback to run after a successfull request. Responsible to trigger all UI changes.
  * @param {object} response  the parsed response body, got after the fetch promise got fullfilled
- * @returns {bollean} - False means invalid response / message.
+ * @returns {boolean} - False means invalid response / message.
  */
 function sent_mail_callback(response) {
   const message = response?.message ?? '';
@@ -81,19 +157,20 @@ function sent_mail_callback(response) {
  * @param {function} callback - (Optional) A callback that receives the parsed request body.
  * @returns {boolean}
  */
-async function make_request(url, requestData, requestMethod, callback=null) {
+async function make_request(url, requestData=null, requestMethod, callback=null) {
+  const fetchConfig = requestMethod.toLowerCase() === 'get' 
+    ? { method: requestMethod }
+    : { method: requestMethod, body: JSON.stringify(requestData) }
+
   const request = await fetch(
     url, 
-    {
-      method: requestMethod,
-      body: JSON.stringify(requestData),
-    }
+    fetchConfig,
   )
     .then(response => { if (response.ok || response.status === 200) return response.json() })
 
     .then(result => { if(!!callback && callback instanceof Function) return callback(result) })
 
-    .catch(err => console.error(`Error: request failed to - ${url}. /\n caused by: ${err}.`))
+    .catch(err => console.error(`Error: request failed to - ${url}. \n caused by: ${err}.`))
     
   return true
 }
@@ -119,4 +196,10 @@ function display_message(message) {
   messageToastInstance.show();
 
   return true;
+}
+
+// Helpers
+function formatTimestamp(timestamp) {
+  const date = new Date(timestamp);
+  return date.toLocaleString();
 }
