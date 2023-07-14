@@ -56,17 +56,10 @@ function loader_handler(mailbox) {
 }
 
 function mailbox_loader_callback(response, mailbox) {
-  console.log('response: ', response);
-  console.log('mailbox: ', mailbox);
-
-  
   // If the response is empty, show an emptyness message
   const emptyWarningElement = document.querySelector('#emptyBoxContent');
 
-  if (!response.length) {
-    emptyWarningElement.classList.replace('d-none', 'd-block')
-    return true;
-  } 
+  if (!response.length) return emptyWarningElement.classList.replace('d-none', 'd-block');
 
   emptyWarningElement.classList.replace('d-block', 'd-none')
   const template = document.querySelector('#emailListItemTemplate');
@@ -96,6 +89,8 @@ function mailListItemBuilder(mailObject, templateElement) {
   emailItemClone.dataset.mailId = mailItemData.id;
   emailItemClone.dataset.mailStatus = mailItemData.read;
 
+  mailItemData.read ? emailItemClone.classList.add('text-bg-secondary') : null;
+
   emailItemClone.querySelector('[data-mail-sender]').textContent = mailItemData.sender;
   emailItemClone.querySelector('[data-mail-subject]').textContent =  mailItemData.subject;
   emailItemClone.querySelector('[data-mail-timestamp]').textContent = mailItemData.timestamp;
@@ -106,7 +101,11 @@ function mailListItemBuilder(mailObject, templateElement) {
   return null;
 }
 
-function openMail(mailId) {
+function openMail(e, mailId) {
+  const mailListItem = document.querySelector(`[data-mail-id="${mailId}"]`)
+
+  mailListItem.classList.add('text-bg-secondary') 
+  console.log(mailId)
   return alert(`Opened mail within id is ${mailId}`);
 }
 
