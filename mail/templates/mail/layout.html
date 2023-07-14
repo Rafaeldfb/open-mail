@@ -4,7 +4,6 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        {% comment %} {% vite_hmr_client %} {% endcomment %}
         <script type="module" src="http://localhost:3000/@vite/client"></script>
 
         <title>{% block title %}Mail{% endblock %}</title>
@@ -21,6 +20,8 @@
     </head>
     
     <body>
+        <input type="hidden" name="activeMailBox" value="">
+        
         <div id="messagesConteiner" class="position-absolute top-0 left-0 w-100">
             {% comment %} here feedback messages are displayed {% endcomment %}
             <div id="toastWrapper" class="d-flex justify-content-end">

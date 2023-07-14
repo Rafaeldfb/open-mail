@@ -1,6 +1,11 @@
 // CONSTANTS
-const BASE_URL = true ? '' : '127.0.0.1:8000' // by requirements, i cant use other file. 
+const BASE_URL = true ? '' : '127.0.0.1:8000'; // by requirements, i cant use other file. 
 //so isn't possible to do some import dotenv stuff and so it will be hard coded here.
+
+/**
+ * SetState for activeMailBox
+ */
+const mailBoxState = document.querySelector('input[name="activeMailBox"');
 
 document.addEventListener('DOMContentLoaded', function() {
 
@@ -26,7 +31,8 @@ function compose_email() {
 }
 
 function load_mailbox(mailbox) {
-  
+  mailBoxState.value = mailbox
+
   // Show the mailbox and hide other views
   document.querySelector('#emails-view').style.display = 'block';
   document.querySelector('#compose-view').style.display = 'none';
@@ -79,7 +85,7 @@ function mailListItemBuilder(mailObject, templateElement) {
     subject: mailObject.subject,
     body: mailObject.body,
     timestamp: formatTimestamp(mailObject.timestamp),
-    read: mailObject.read,
+    read:  mailBoxState.value === 'sent' ? false : mailObject.read,
     archived: mailObject.archived,
   }
 
@@ -89,7 +95,9 @@ function mailListItemBuilder(mailObject, templateElement) {
   emailItemClone.dataset.mailId = mailItemData.id;
   emailItemClone.dataset.mailStatus = mailItemData.read;
 
-  mailItemData.read ? emailItemClone.classList.add('text-bg-secondary') : null;
+  mailItemData.read 
+    ? emailItemClone.classList.add('text-bg-secondary') 
+    : emailItemClone.classList.add('text-bg-light');
 
   emailItemClone.querySelector('[data-mail-sender]').textContent = mailItemData.sender;
   emailItemClone.querySelector('[data-mail-subject]').textContent =  mailItemData.subject;
@@ -121,20 +129,43 @@ function loaderMail(request) {
 function emailModalData(data, emailModalElement) {
   console.log('data from request: ', data);
 
+  const buttonArchiveMail = emailModalElement.querySelector('.mail-archived');
+
   emailModalElement.querySelector('.mail-subject').innerText = data.subject;
   emailModalElement.querySelector('.mail-sender').innerText = data.sender;
   emailModalElement.querySelector('.mail-recipients').innerText = data.recipients;
   emailModalElement.querySelector('.mail-body').innerText = data.body;
   emailModalElement.querySelector('.mail-timestamp').innerText = data.timestamp;
-  emailModalElement.querySelector('.mail-archived').innerText = data.archived ? 'unarchive' : 'archive';
-  emailModalElement.querySelector('.mail-archived').dataset.archived = data.archived;
-  emailModalElement.querySelector('.mail-archived').dataset.mailId = data.id;
+  buttonArchiveMail.innerText = data.archived ? 'unarchive' : 'archive';
+  buttonArchiveMail.dataset.mailArchived = data.archived;
+  buttonArchiveMail.dataset.mailId = data.id;
+
+  buttonArchiveMail.classList.remove('d-none')
+  if (mailBoxState.value === 'sent') buttonArchiveMail.classList.add('d-none')
 
   return make_request(`emails/${data.id}`, {read: true}, 'put');
 }
 
 function mailArchiveRequestHandler(e, mailId, mailArchived) {
-  alert(`The email (id: ${mailId}) will be ${mailArchived ? 'unarchived': 'archived'}.`)
+  const emailModalElement = document.querySelector('#ajaxEmailModal');
+  let = newArchivedStatus = !JSON.parse(mailArchived);
+
+  emailModalElement.querySelector('.mail-archived').innerText = newArchivedStatus ? 'unarchive' : 'archive';
+  emailModalElement.querySelector('.mail-archived').dataset.mailArchived = newArchivedStatus;
+  
+  const modalIntance = bootstrap.Modal.getInstance(emailModalElement);
+
+  make_request(
+    `emails/${mailId}`, 
+    {archived: newArchivedStatus}, 
+    'PUT',
+    () => {
+      load_mailbox('inbox');
+      modalIntance.toggle()
+    }
+  );
+
+  return null;
 }
 
 //          SEND EMAIL        **** START
