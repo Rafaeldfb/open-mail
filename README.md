@@ -39,12 +39,12 @@ Using JavaScript, HTML, and CSS, complete the implementation of your single-page
     - [X] If the email is unread, it should appear with a white background. If the email has been read, it should appear with a gray background.
 
 ## View Email
-- [ ] When a user clicks on an email, the user should be taken to a view where they see the content of that email.
-    - [ ] You’ll likely want to make a GET request to `/emails/<email_id>` to request the email.
-    - [ ] Your application should show the email’s sender, recipients, subject, timestamp, and body.
-    - [ ] You’ll likely want to add an additional `<div>` to `inbox.html` (in addition to `emails-view` and `compose-view`) for displaying the email. Be sure to update your code to hide and show the right views when navigation options are clicked.
-    - [ ] See the hint in the Hints section about how to add an event listener to an HTML element that you’ve added to the DOM.
-    - [ ] Once the email has been clicked on, you should mark the email as read. Recall that you can send a PUT request to `/emails/<email_id>` to update whether an email is read or not.
+- [X] When a user clicks on an email, the user should be taken to a view where they see the content of that email.
+    - [X] You’ll likely want to make a GET request to `/emails/<email_id>` to request the email.
+    - [X] Your application should show the email’s sender, recipients, subject, timestamp, and body.
+    - [X] You’ll likely want to add an additional `<div>` to `inbox.html` (in addition to `emails-view` and `compose-view`) for displaying the email. Be sure to update your code to hide and show the right views when navigation options are clicked.
+    - [x] See the hint in the Hints section about how to add an event listener to an HTML element that you’ve added to the DOM.
+    - [x] Once the email has been clicked on, you should mark the email as read. Recall that you can send a PUT request to `/emails/<email_id>` to update whether an email is read or not.
 
 ## Archive and Unarchive
 - [ ] Allow users to archive and unarchive emails that they have received.

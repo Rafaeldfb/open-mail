@@ -94,7 +94,6 @@ function mailListItemBuilder(mailObject, templateElement) {
   emailItemClone.querySelector('[data-mail-sender]').textContent = mailItemData.sender;
   emailItemClone.querySelector('[data-mail-subject]').textContent =  mailItemData.subject;
   emailItemClone.querySelector('[data-mail-timestamp]').textContent = mailItemData.timestamp;
-
   
   document.querySelector("#listBoxContent").appendChild(emailItemClone);
 
@@ -102,11 +101,40 @@ function mailListItemBuilder(mailObject, templateElement) {
 }
 
 function openMail(e, mailId) {
-  const mailListItem = document.querySelector(`[data-mail-id="${mailId}"]`)
+  const mailListItem = document.querySelector(`[data-mail-id="${mailId}"]`);
 
-  mailListItem.classList.add('text-bg-secondary') 
-  console.log(mailId)
-  return alert(`Opened mail within id is ${mailId}`);
+  mailListItem.classList.add('text-bg-secondary');
+  console.log(mailId);
+
+  return make_request(`emails/${mailId}`, null,'get', loaderMail);
+}
+
+function loaderMail(request) {
+  const emailModalElement = document.getElementById('ajaxEmailModal');
+  const emailModal = bootstrap.Modal.getOrCreateInstance(emailModalElement);
+
+  emailModalData(request, emailModalElement);
+
+  return emailModal.show();
+}
+
+function emailModalData(data, emailModalElement) {
+  console.log('data from request: ', data);
+
+  emailModalElement.querySelector('.mail-subject').innerText = data.subject;
+  emailModalElement.querySelector('.mail-sender').innerText = data.sender;
+  emailModalElement.querySelector('.mail-recipients').innerText = data.recipients;
+  emailModalElement.querySelector('.mail-body').innerText = data.body;
+  emailModalElement.querySelector('.mail-timestamp').innerText = data.timestamp;
+  emailModalElement.querySelector('.mail-archived').innerText = data.archived ? 'unarchive' : 'archive';
+  emailModalElement.querySelector('.mail-archived').dataset.archived = data.archived;
+  emailModalElement.querySelector('.mail-archived').dataset.mailId = data.id;
+
+  return make_request(`emails/${data.id}`, {read: true}, 'put');
+}
+
+function mailArchiveRequestHandler(e, mailId, mailArchived) {
+  alert(`The email (id: ${mailId}) will be ${mailArchived ? 'unarchived': 'archived'}.`)
 }
 
 //          SEND EMAIL        **** START
@@ -165,7 +193,11 @@ async function make_request(url, requestData=null, requestMethod, callback=null)
     url, 
     fetchConfig,
   )
-    .then(response => { if (response.ok || response.status === 200) return response.json() })
+    .then(response => { 
+      // When a put request was successfull but has no content within response
+      if (response.status === 204) return true;
+      if (response.ok || response.status === 200) return response.json();
+    })
 
     .then(result => { if(!!callback && callback instanceof Function) return callback(result) })
 
