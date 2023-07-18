@@ -63,10 +63,19 @@
                     <p class="mail-body"></p>
                 </div>
         
-                <div class="modal-footer">
+                <div class="modal-footer d-flex justify-content-end">
                     <button 
                         type="button" 
-                        class="mail-archived btn btn-primary"
+                        class="mail-reply btn btn-primary me-3"
+                        data-mail-id=""
+                        onclick="mailReplyRequestHandler(event, this.dataset.mailId)"
+                    >
+                        Reply
+                    </button>
+
+                    <button 
+                        type="button" 
+                        class="mail-archived btn btn-outline-primary"
                         data-mail-archived=""
                         data-mail-id=""
                         onclick="mailArchiveRequestHandler(event, this.dataset.mailId, this.dataset.mailArchived)"

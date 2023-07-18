@@ -6,9 +6,17 @@ const BASE_URL = true ? '' : '127.0.0.1:8000'; // by requirements, i cant use ot
  * SetState for activeMailBox
  */
 const mailBoxState = document.querySelector('input[name="activeMailBox"');
+/**
+ * Return the mail box bootstrap modal instance
+ * @returns Boostrap Modal Instance
+ */
+const mailBoxModalInstance = () => {
+  const emailModalElement = document.getElementById('ajaxEmailModal');
+  return bootstrap.Modal.getOrCreateInstance(emailModalElement);
+
+}
 
 document.addEventListener('DOMContentLoaded', function() {
-
   // Use buttons to toggle between views
   document.querySelector('#inbox').addEventListener('click', () => load_mailbox('inbox'));
   document.querySelector('#sent').addEventListener('click', () => load_mailbox('sent'));
@@ -119,7 +127,8 @@ function openMail(e, mailId) {
 
 function loaderMail(request) {
   const emailModalElement = document.getElementById('ajaxEmailModal');
-  const emailModal = bootstrap.Modal.getOrCreateInstance(emailModalElement);
+  // const emailModal = bootstrap.Modal.getOrCreateInstance(emailModalElement);
+  const emailModal = mailBoxModalInstance()
 
   emailModalData(request, emailModalElement);
 
@@ -136,9 +145,11 @@ function emailModalData(data, emailModalElement) {
   emailModalElement.querySelector('.mail-recipients').innerText = data.recipients;
   emailModalElement.querySelector('.mail-body').innerText = data.body;
   emailModalElement.querySelector('.mail-timestamp').innerText = data.timestamp;
+
   buttonArchiveMail.innerText = data.archived ? 'unarchive' : 'archive';
   buttonArchiveMail.dataset.mailArchived = data.archived;
   buttonArchiveMail.dataset.mailId = data.id;
+  emailModalElement.querySelector('.mail-reply').dataset.mailId = data.id;
 
   buttonArchiveMail.classList.remove('d-none')
   if (mailBoxState.value === 'sent') buttonArchiveMail.classList.add('d-none')
@@ -153,7 +164,8 @@ function mailArchiveRequestHandler(e, mailId, mailArchived) {
   emailModalElement.querySelector('.mail-archived').innerText = newArchivedStatus ? 'unarchive' : 'archive';
   emailModalElement.querySelector('.mail-archived').dataset.mailArchived = newArchivedStatus;
   
-  const modalIntance = bootstrap.Modal.getInstance(emailModalElement);
+  // const modalIntance = bootstrap.Modal.getInstance(emailModalElement);
+  const modalIntance = mailBoxModalInstance()
 
   make_request(
     `emails/${mailId}`, 
@@ -166,6 +178,33 @@ function mailArchiveRequestHandler(e, mailId, mailArchived) {
   );
 
   return null;
+}
+
+function mailReplyRequestHandler(e, mailId) {
+  return make_request(
+    `emails/${mailId}`,
+    null,
+    'get',
+    getOriginalEmailToReply
+  );
+}
+
+function getOriginalEmailToReply(response) {
+  let messageStore = response;
+  compose_email();
+
+  const formCompose = document.querySelector('#compose-view');
+
+  formCompose.querySelector('[name="recipients"]').value = messageStore.sender;
+  formCompose.querySelector('[name="subject"]').value = messageStore.subject.includes("RE: ") 
+    ? messageStore.subject 
+    : `RE: ${messageStore.subject}`;
+  formCompose.querySelector('[name="body"]').value = 
+    `"On ${messageStore.timestamp} ${messageStore.sender} wrote:" \n"${messageStore.body}"`;
+
+  const modalIntance = mailBoxModalInstance();
+
+  return modalIntance.hide();
 }
 
 //          SEND EMAIL        **** START

@@ -17,51 +17,179 @@
         />
         
         {% vite_asset 'js/main.js' async="async" %}
+
+        <style>
+            #loader {
+                min-height: 100vh;
+                width: 100%;
+            }
+            body.ui-loading main {
+                display: none;
+            }
+
+            body.ui-loading #loader {
+                display: flex;
+                z-index: 99;
+            }
+            
+            body.ui-loaded main {
+                display: block;
+            }
+
+            body.ui-loaded #loader {
+                display: none;
+            }
+
+            {% comment %} Loader css {% endcomment %}
+            .lds-roller {
+                margin: auto;
+                display: inline-block;
+                position: relative;
+                width: 80px;
+                height: 80px;
+            }
+            .lds-roller div {
+                animation: lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+                transform-origin: 40px 40px;
+            }
+            .lds-roller div:after {
+                content: " ";
+                display: block;
+                position: absolute;
+                width: 7px;
+                height: 7px;
+                border-radius: 50%;
+                background: #0d6efd;;
+                margin: -4px 0 0 -4px;
+            }
+            .lds-roller div:nth-child(1) {
+                animation-delay: -0.036s;
+            }
+            .lds-roller div:nth-child(1):after {
+                top: 63px;
+                left: 63px;
+            }
+            .lds-roller div:nth-child(2) {
+                animation-delay: -0.072s;
+            }
+            .lds-roller div:nth-child(2):after {
+                top: 68px;
+                left: 56px;
+            }
+            .lds-roller div:nth-child(3) {
+                animation-delay: -0.108s;
+            }
+            .lds-roller div:nth-child(3):after {
+                top: 71px;
+                left: 48px;
+            }
+            .lds-roller div:nth-child(4) {
+                animation-delay: -0.144s;
+            }
+            .lds-roller div:nth-child(4):after {
+                top: 72px;
+                left: 40px;
+            }
+            .lds-roller div:nth-child(5) {
+                animation-delay: -0.18s;
+            }
+            .lds-roller div:nth-child(5):after {
+                top: 71px;
+                left: 32px;
+            }
+            .lds-roller div:nth-child(6) {
+                animation-delay: -0.216s;
+            }
+            .lds-roller div:nth-child(6):after {
+                top: 68px;
+                left: 24px;
+            }
+            .lds-roller div:nth-child(7) {
+                animation-delay: -0.252s;
+            }
+            .lds-roller div:nth-child(7):after {
+                top: 63px;
+                left: 17px;
+            }
+            .lds-roller div:nth-child(8) {
+                animation-delay: -0.288s;
+            }
+            .lds-roller div:nth-child(8):after {
+                top: 56px;
+                left: 12px;
+            }
+            @keyframes lds-roller {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        </style>
+
+        <script defer>
+            window.addEventListener('load', () => {
+                const bodyElement = document.querySelector('body');
+                return bodyElement.classList.replace("ui-loading", "ui-loaded");
+            })
+        </script>
     </head>
     
-    <body>
+    <body class="position-relative ui-loading">
         <input type="hidden" name="activeMailBox" value="">
-        
-        <div id="messagesConteiner" class="position-absolute top-0 left-0 w-100">
-            {% comment %} here feedback messages are displayed {% endcomment %}
-            <div id="toastWrapper" class="d-flex justify-content-end">
-                <div 
-                    class="toast align-items-center text-bg-primary border-0 m-5" 
-                    role="alert" 
-                    aria-live="assertive" 
-                    aria-atomic="true"
-                >
-                    <div class="d-flex">
-                        <div id="messageContent" class="toast-body fw-semibold mx-auto"></div>
 
-                        <button 
-                            type="button" 
-                            class="btn-close me-2 m-auto" 
-                            data-bs-dismiss="toast" 
-                            aria-label="Close"
-                        ></button>
+        <div id="loader" class="position-absolute">
+            <div class="lds-roller">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+
+        <main>
+            <div id="messagesConteiner" class="position-absolute top-0 left-0 w-100">
+                {% comment %} here feedback messages are displayed {% endcomment %}
+                <div id="toastWrapper" class="d-flex justify-content-end">
+                    <div 
+                        class="toast align-items-center text-bg-primary border-0 m-5" 
+                        role="alert" 
+                        aria-live="assertive" 
+                        aria-atomic="true"
+                    >
+                        <div class="d-flex">
+                            <div id="messageContent" class="toast-body fw-semibold mx-auto"></div>
+    
+                            <button 
+                                type="button" 
+                                class="btn-close me-2 m-auto" 
+                                data-bs-dismiss="toast" 
+                                aria-label="Close"
+                            ></button>
+                        </div>
                     </div>
                 </div>
+    
+                <template id="emailListItemTemplate">
+                    <div 
+                        class="row emaiListItem border-bottom border-1 border-secondary my-2 cursor-pointer" 
+                        onclick="openMail(event, this.dataset.mailId)" 
+                        data-mail-id="" 
+                        data-mail-status=""
+                    >
+                        <div class="col-auto sender">From: <span data-mail-sender></span></div>
+                        <div class="col subject">Subject: <span data-mail-subject></span></div>
+                        <div class="col-auto timestamp">Timestamp: <span data-mail-timestamp></span></div>
+                    </div>
+                </template>
             </div>
-
-            <template id="emailListItemTemplate">
-                <div 
-                    class="row emaiListItem border-bottom border-1 border-secondary my-2 cursor-pointer" 
-                    onclick="openMail(event, this.dataset.mailId)" 
-                    data-mail-id="" 
-                    data-mail-status=""
-                >
-                    <div class="col-auto sender">From: <span data-mail-sender></span></div>
-                    <div class="col subject">Subject: <span data-mail-subject></span></div>
-                    <div class="col-auto timestamp">Timestamp: <span data-mail-timestamp></span></div>
-                </div>
-            </template>
-        </div>
-
-        <div class="container">
-            {% block body %}
-            {% endblock %}
-        </div>
+    
+            <div class="container">
+                {% block body %}
+                {% endblock %}
+            </div>
+        </main>
 
         {% block script %}{% endblock script %}
     </body>
