@@ -7,3 +7,17 @@ main {
   display: flex;
   min-height: 100vh;
 }
+
+.cursor-default {
+  cursor: default;
+}
+.nav-option button {
+  box-shadow: none;
+  transition: all 100ms ease-in;
+}
+.nav-option-active {
+	transform: translate(0, 25%);
+	font-weight: bold;
+	pointer-events: none;
+  box-shadow: inset white 0 0 2px;
+}

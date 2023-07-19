@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Use buttons to toggle between views
   document.querySelector('#inbox').addEventListener('click', () => load_mailbox('inbox'));
   document.querySelector('#sent').addEventListener('click', () => load_mailbox('sent'));
-  document.querySelector('#archived').addEventListener('click', () => load_mailbox('archive'));
+  document.querySelector('#archive').addEventListener('click', () => load_mailbox('archive'));
   document.querySelector('#compose').addEventListener('click', compose_email);
 
   // By default, load the inbox
@@ -28,6 +28,12 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function compose_email() {
+  // navbar active page
+  const navPages = document.querySelectorAll('.nav-option button');
+  navPages.forEach(item => {
+    item.id === 'compose' ? item.classList.add('nav-option-active') : item.classList.remove('nav-option-active');
+  });
+
   // Show compose view and hide other views
   document.querySelector('#emails-view').style.display = 'none';
   document.querySelector('#compose-view').style.display = 'block';
@@ -40,6 +46,12 @@ function compose_email() {
 
 function load_mailbox(mailbox) {
   mailBoxState.value = mailbox
+
+  // navbar active page
+  const navPages = document.querySelectorAll('.nav-option button');
+  navPages.forEach(item => {
+    item.id === mailbox ? item.classList.add('nav-option-active') : item.classList.remove('nav-option-active');
+  })
 
   // Show the mailbox and hide other views
   document.querySelector('#emails-view').style.display = 'block';
