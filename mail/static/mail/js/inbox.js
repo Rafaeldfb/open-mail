@@ -147,11 +147,10 @@ function openMail(e, mailId) {
 
 function loaderMail(request) {
   const emailModalElement = document.getElementById('ajaxEmailModal');
-  // const emailModal = bootstrap.Modal.getOrCreateInstance(emailModalElement);
   const emailModal = mailBoxModalInstance()
 
   emailModalData(request, emailModalElement);
-
+  
   return emailModal.show();
 }
 
@@ -288,9 +287,7 @@ async function make_request(url, requestData=null, requestMethod, callback=null)
       if (response.status === 204) return true;
       if (response.ok || response.status === 200) return response.json();
     })
-
     .then(result => { if(!!callback && callback instanceof Function) return callback(result) })
-
     .catch(err => console.error(`Error: request failed to - ${url}. \n caused by: ${err}.`))
     
   return true
@@ -311,9 +308,7 @@ function display_message(message) {
   if (typeof message != 'string'|| !message.trim().length ) return false;
 
   const messageToastInstance = bootstrap.Toast.getOrCreateInstance(messageToast);
-
   messageToast.querySelector('#messageContent').innerHTML = message.trim();
-
   messageToastInstance.show();
 
   return true;
