@@ -6,6 +6,15 @@ const BASE_URL = true ? '' : '127.0.0.1:8000'; // by requirements, i cant use ot
  * SetState for activeMailBox
  */
 const mailBoxState = document.querySelector('input[name="activeMailBox"');
+
+/**
+ * Stores data for scroll event inside mailbox.
+ */
+const scrollMailboxState = {
+  lastScroll: Date.now(),
+  timeout: 500,
+};
+
 /**
  * Return the mail box bootstrap modal instance
  * @returns Boostrap Modal Instance
@@ -13,7 +22,6 @@ const mailBoxState = document.querySelector('input[name="activeMailBox"');
 const mailBoxModalInstance = () => {
   const emailModalElement = document.getElementById('ajaxEmailModal');
   return bootstrap.Modal.getOrCreateInstance(emailModalElement);
-
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -310,6 +318,30 @@ function display_message(message) {
 
   return true;
 }
+
+// Mailbox containers - scrolling effects
+const mailboxScrollContainer = document.querySelector('#mailboxContent');
+
+mailboxScrollContainer.addEventListener('scroll', (event) => {
+  if (Date.now() - scrollMailboxState.lastScroll < scrollMailboxState.timeout) return null;
+  mailboxContainerScrollHandler(event);
+  return scrollMailboxState.lastScroll = Date.now();
+});
+
+function mailboxContainerScrollHandler(event) {
+  const scrollTop = mailboxScrollContainer.scrollTop;
+  const scrollHeight = mailboxScrollContainer.scrollHeight;
+  const clientHeight = mailboxScrollContainer.clientHeight;
+
+  if (scrollTop == 0) mailboxScrollContainer.classList.add('scrolledTop');
+  else mailboxScrollContainer.classList.remove('scrolledTop');
+
+  if (clientHeight + scrollTop == scrollHeight) mailboxScrollContainer.classList.add('scrolledBottom');
+  else mailboxScrollContainer.classList.remove('scrolledBottom');
+
+  return null;
+}
+
 
 // Helpers
 function formatTimestamp(timestamp) {
