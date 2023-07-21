@@ -31,25 +31,58 @@
         </div>
 
         <div id="compose-view" class="pt-5 mt-5">
-            <h3>New Email</h3>
-
-            <form id="compose-form" onsubmit="send_mail(event)">
-                <div class="form-group">
-                    From: <input name="origin" disabled class="form-control" value="{{ request.user.email }}">
+            <div class="card border-2 shadow-lg">
+                <div class="card-header">
+                    <h3>New Email</h3>
                 </div>
 
-                <div class="form-group">
-                    To: <input name="recipients" id="compose-recipients" class="form-control" required>
+                <div class="card-body my-3">
+                    <form id="compose-form" class="row g-0" onsubmit="send_mail(event)">
+                        <div class="form-floating col-auto my-2 me-2">
+                            <input 
+                                name="origin" 
+                                id="compose-origin" 
+                                class="form-control" 
+                                value="{{ request.user.email }}"
+                                disabled 
+                            >
+                            <label for="compose-origin">From:</label>
+                        </div>
+
+                        <div class="form-floating col my-2">
+                            <input 
+                                name="recipients" 
+                                id="compose-recipients" 
+                                class="form-control" 
+                                title="Multiple e-mails must be coma separeted" 
+                                placeholder="exemple@mail.com"
+                                required
+                            >
+                            <label for="compose-recipients">To:</label>
+                        </div>
+
+                        <div class="form-floating col-12">
+                            <input name="subject" class="form-control" id="compose-subject" placeholder="Subject">
+                            <label for="compose-subject">Subject:</label>
+                        </div>
+
+                        <div class="form-floating col-12 my-2">
+                            <textarea 
+                                name="body" 
+                                class="form-control" 
+                                id="compose-body" 
+                                placeholder="Write your message here..."
+                                style="min-height: 210px !important"
+                            ></textarea>
+                            <label for="compose-body">Message body</label>
+                        </div>
+                    </form>
                 </div>
 
-                <div class="form-group">
-                    <input name="subject" class="form-control" id="compose-subject" placeholder="Subject">
+                <div class="card-footer d-flex">
+                    <input type="submit" form="compose-form" class="btn btn-primary ms-auto me-0" value="Send">
                 </div>
-
-                <textarea name="body" class="form-control" id="compose-body" placeholder="Body"></textarea>
-
-                <input type="submit" class="btn btn-primary"/>
-            </form>
+            </div>
         </div>
     </div>
 

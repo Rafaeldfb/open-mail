@@ -124,8 +124,8 @@ function mailListItemBuilder(mailObject, templateElement) {
   emailItemClone.dataset.mailStatus = mailItemData.read;
 
   mailItemData.read 
-    ? emailItemClone.classList.add('text-bg-secondary') 
-    : emailItemClone.classList.add('text-bg-light');
+    ? emailItemClone.classList.add('readed') 
+    : emailItemClone.classList.add('new');
 
   emailItemClone.querySelector('[data-mail-sender]').textContent = mailItemData.sender;
   emailItemClone.querySelector('[data-mail-subject]').textContent =  mailItemData.subject;
@@ -138,9 +138,7 @@ function mailListItemBuilder(mailObject, templateElement) {
 
 function openMail(e, mailId) {
   const mailListItem = document.querySelector(`[data-mail-id="${mailId}"]`);
-
-  mailListItem.classList.add('text-bg-secondary');
-  console.log(mailId);
+  mailListItem.classList.replace('new', 'readed');
 
   return make_request(`emails/${mailId}`, null,'get', loaderMail);
 }
@@ -155,8 +153,6 @@ function loaderMail(request) {
 }
 
 function emailModalData(data, emailModalElement) {
-  console.log('data from request: ', data);
-
   const buttonArchiveMail = emailModalElement.querySelector('.mail-archived');
 
   emailModalElement.querySelector('.mail-subject').innerText = data.subject;
@@ -183,7 +179,6 @@ function mailArchiveRequestHandler(e, mailId, mailArchived) {
   emailModalElement.querySelector('.mail-archived').innerText = newArchivedStatus ? 'unarchive' : 'archive';
   emailModalElement.querySelector('.mail-archived').dataset.mailArchived = newArchivedStatus;
   
-  // const modalIntance = bootstrap.Modal.getInstance(emailModalElement);
   const modalIntance = mailBoxModalInstance()
 
   make_request(

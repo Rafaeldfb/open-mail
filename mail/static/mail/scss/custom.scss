@@ -58,3 +58,26 @@ main {
     }
   }
 }
+
+// Mailbox list Item 
+.emaiListItem {
+	border-radius: 1rem;
+	font-size: 14px;
+	margin-bottom: 1.3rem !important;
+	padding-top: 0.5rem;
+	padding-bottom: 0.5rem;
+  &.readed {
+    opacity: 80%;
+    background-color: $gray-600;
+    color: white;
+  }
+  &.new {
+    background-color: $light;
+    color: $dark;
+  }
+  & .emailListItem_label {
+    font-size: 0.7rem;
+    font-style: italic;
+    margin-right: 0.5rem;
+  }
+}
