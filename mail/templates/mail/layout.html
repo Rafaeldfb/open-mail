@@ -173,17 +173,17 @@
     
                 <template id="emailListItemTemplate">
                     <div 
-                        class="row emaiListItem border-bottom border-2 border-secondary cursor-pointer" 
+                        class="row g-0 emaiListItem border-bottom border-2 border-secondary cursor-pointer" 
                         onclick="openMail(event, this.dataset.mailId)" 
                         data-mail-id="" 
                         data-mail-status=""
                     >
-                        <div class="col sender">
+                        <div class="col-12 col-sm sender">
                             <span class="emailListItem_label">From: </span>
                             <span data-mail-sender></span>
                         </div>
 
-                        <div class="col-auto timestamp">
+                        <div class="col-12 col-sm-auto timestamp">
                             <span class="emailListItem_label">At: </span>
                             <span data-mail-timestamp></span>
                         </div>

@@ -5,10 +5,10 @@
 
 {% block body %}
     <div class="mx-auto">
-        <nav class="navbar fixed-top text-bg-primary align-items-center px-4 py-3">
+        <nav class="navbar fixed-top text-bg-primary align-items-center px-4 pt-3 pb-1">
             <h6 class="cursor-default my-0 ms-0 me-auto">{{ request.user.email }}</h6>
 
-            <div class="nav-option mx-auto overflow-y-hidden">
+            <div class="nav-option overflow-y-hidden col-12 order-3 mx-auto mt-2 ">
                 <button class="btn btn-sm btn-outline-light me-2" id="inbox">Inbox</button>
                 <button class="btn btn-sm btn-outline-light me-2" id="compose">Compose</button>
                 <button class="btn btn-sm btn-outline-light me-2" id="sent">Sent</button>
