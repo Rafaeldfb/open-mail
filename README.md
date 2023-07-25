@@ -6,19 +6,29 @@ Front-end - Js vanilla, Sass, ViteJs and Bootstrap v5.3.
 
 ## Instalation: (using bash/zshel terminal)
 
-Using venv - make your env for python 3.8 and activate it;
+### Using venv:
+make your env for python 3.8 and activate it;
 to run the env open the root folder at your terminal and run : 
 ```$ source ./env/bin/activate```
 
+### Python dependencies:
 Now use pip to match the python's packages requirement:
 ```pip install -r requirements.txt```
 
+### Node.js dependencies:
 Install all node dependencies:
 ```$ npm i```
 
+### Dot env file (not required):
 Copy and rename the model.env to .env and fill it with your configurations:
 ```$ cp ./model.env ./.env```
 
+### Create your Local development database:
+At the root directory, just run:
+```$ python3 manage.py makemigrations ```
+Then: 
+```$ python3 manage.py migrate```
+Now you have a new database.
 ## How to run Locally (development)
 At the root directory you should run a server for Django's backend and another for Vite's assets server as folllows
 ### back-end:
