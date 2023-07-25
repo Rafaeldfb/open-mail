@@ -2,7 +2,7 @@
 A Client side interface for an email plattaform, based in CS50 web third project.
 
 Back-end - Django;
-Front-end - Js vanilla, Sass, ViteJs and Bootstrap v5.2.
+Front-end - Js vanilla, Sass, ViteJs and Bootstrap v5.3.
 
 ## Instalation: (using bash/zshel terminal)
 
@@ -19,6 +19,16 @@ Install all node dependencies:
 Copy and rename the model.env to .env and fill it with your configurations:
 ```$ cp ./model.env ./.env```
 
+## How to run Locally (development)
+At the root directory you should run a server for Django's backend and another for Vite's assets server as folllows
+### back-end:
+'$ python3 manage.py runserver'
+### front-end:
+'npm run dev'
+
+### LocalHost address:
+The localhost addres and port that will grant acess to the project will be prompted by the front-end command script ('npm run dev').
+Just click at the link with pressed ctrl (or cmd) buttom or just copy and paste it at your browser.
 
 
 # Specifications List:
@@ -31,7 +41,7 @@ Using JavaScript, HTML, and CSS, complete the implementation of your single-page
     - [X]  Once the email has been sent, load the user’s sent mailbox.
 
 ## Mailbox
-- [ ] When a user visits their Inbox, Sent mailbox, or Archive, load the appropriate mailbox.
+- [X] When a user visits their Inbox, Sent mailbox, or Archive, load the appropriate mailbox.
     - [X] You’ll likely want to make a GET request to `/emails/<mailbox>` to request the emails for a particular mailbox.
     - [X] When a mailbox is visited, the application should first query the API for the latest emails in that mailbox.
     - [X] When a mailbox is visited, the name of the mailbox should appear at the top of the page (this part is done for you).
